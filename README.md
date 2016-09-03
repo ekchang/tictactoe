@@ -246,3 +246,4 @@ Goodbye. Thanks for playing.
 ## Exercise to reader
 - How might this be adapted for Connect Four mode?
 - Specify a list of special unicode icons as the player piece instead of letter?
+- Register an AI player who automatically takes a turn (Minimax?)
