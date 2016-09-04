@@ -9,6 +9,9 @@ import static com.ekchang.tictactoe.util.Printer.showStalemate;
 import static com.ekchang.tictactoe.util.Printer.showWinner;
 import static com.ekchang.tictactoe.util.Printer.showf;
 
+/**
+ * Board model representing the current state of the game.
+ */
 public class Board {
   public static final int DEFAULT_BOARD_WIDTH = 3;
   public static final int DEFAULT_BOARD_HEIGHT = 3;
@@ -18,17 +21,26 @@ public class Board {
   private final int width;
   private final int height;
   private final int winCondition;
-  private boolean isGameOver;
-  private int numTurns;
   private final List<List<Square>> grid;
 
-  public Board(int width, int height, List<List<Square>> grid, int winCondition) {
+  private boolean isGameOver;
+  private int numTurns;
+
+  private Board(int width, int height, List<List<Square>> grid, int winCondition) {
     this.width = width;
     this.height = height;
     this.grid = grid;
     this.winCondition = winCondition;
   }
 
+  /**
+   * Static factory method to create a {@link Board}.
+   *
+   * @param width the width of the board
+   * @param height the height of the board
+   * @param winCondition the number in a row required to win the game
+   * @return the configured board
+   */
   public static Board makeBoard(int width, int height, int winCondition) {
     return new Board(width,
         height,
@@ -49,26 +61,56 @@ public class Board {
     return grid;
   }
 
+  /**
+   * Returns the width of the board.
+   *
+   * @return the width.
+   */
   public int getWidth() {
     return width;
   }
 
+  /**
+   * Return the height of the board.
+   *
+   * @return the height.
+   */
   public int getHeight() {
     return height;
   }
 
+  /**
+   * Return the number of turns that have elapsed in the game.
+   *
+   * @return the number of turns that have been completed.
+   */
   public int getNumTurns() {
     return numTurns;
   }
 
+  /**
+   * Return whether the game is over or not.
+   *
+   * @return {@code true} if the game is over, {@code false} otherwise
+   */
   public boolean gameOver() {
     return isGameOver;
   }
 
-  private Square squareAt(int row, int column) {
-    return grid.get(row).get(column);
+  /**
+   * Reset the board state such that the board is ready to start a new game.
+   */
+  public void reset() {
+    numTurns = 0;
+    isGameOver = false;
+    grid.clear();
+    grid.addAll(makeGrid(width, height));
   }
 
+  /**
+   * Print to console the current state of the board. Some fancy trial and error was required to get
+   * the formatting right.
+   */
   public void showBoard() {
     showf(" ");
     for (int i = 0; i < width; i++) {
@@ -89,6 +131,8 @@ public class Board {
         }
       }
 
+      // A wacky way of drawing the horizontal lines for each row of the board...
+      // http://stackoverflow.com/a/16812721/4546572
       if (i < grid.size() - 1) {
         showf(" ");
         showf(new String(new char[width - 1]).replace("\0", "----"));
@@ -97,6 +141,15 @@ public class Board {
     }
   }
 
+  /**
+   * Attempt to mark a square on the board for a given player. Will return {@code false} if a turn
+   * failed (either bad row/column or square is already occupied).
+   *
+   * @param row the row coordinate of the square
+   * @param column the column coordinate of the square
+   * @param player the player who wants to mark the square with his/her piece
+   * @return {@code true} if a turn was successfully made, {@code false} otherwise
+   */
   public boolean takeTurn(int row, int column, Player player) {
     if (row < 0 || row >= height) {
       showf("Row cannot be less than 0 or greater than %d\n", height - 1);
@@ -213,10 +266,7 @@ public class Board {
     return false;
   }
 
-  public void reset() {
-    numTurns = 0;
-    isGameOver = false;
-    grid.clear();
-    grid.addAll(makeGrid(width, height));
+  private Square squareAt(int row, int column) {
+    return grid.get(row).get(column);
   }
 }

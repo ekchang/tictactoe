@@ -16,6 +16,10 @@ import static com.ekchang.tictactoe.util.Printer.showEllipse;
 import static com.ekchang.tictactoe.util.Printer.showLine;
 import static com.ekchang.tictactoe.util.Printer.showf;
 
+/**
+ * TicTacToe game controller. Responsible for managing the flow of the game, serving as the main
+ * bridge to sync the {@link Board} with {@link Player Player} objects.
+ */
 public class TicTacToe {
   public static final int MIN_PLAYERS = 2;
   public static final int MIN_BOARD_WIDTH = 1;
@@ -28,33 +32,32 @@ public class TicTacToe {
   private final List<Player> players;
   private final Scanner scanner;
 
-  public TicTacToe(int numPlayers, Board board, Scanner scanner, List<Player> players) {
+  /**
+   * Initialize a {@link TicTacToe} instance. Create one through the {@link Builder}, which
+   * sanitizes input.
+   *
+   * @param numPlayers the number of players in the game
+   * @param board the board for this game
+   * @param scanner the scanner to accept user input during the game
+   * @param players the list of players in the game
+   */
+  private TicTacToe(int numPlayers, Board board, Scanner scanner, List<Player> players) {
     this.numPlayers = numPlayers;
     this.board = board;
     this.scanner = scanner;
     this.players = players;
   }
 
-  private String getInput() {
-    showf(CONSOLE_INPUT);
-    return scanner.next();
-  }
-
-  private int getBoardInput() {
-    return scanner.nextInt();
-  }
-
-  private char getSingleCharInput() {
-    showf(CONSOLE_INPUT);
-    return scanner.next().charAt(0);
-  }
-
+  /**
+   * Start the game for a specified configuration.
+   */
   public void startGame() {
     show("Starting game...");
     boolean play = true;
     while (play) {
       reset();
 
+      // Show the specified game configuration
       lineBreak();
       showf("Players: %d\n", numPlayers);
       showf("Board: %d x %d\n", board.getWidth(), board.getHeight());
@@ -64,6 +67,7 @@ public class TicTacToe {
 
       show("Start game!");
       showEllipse();
+      // The turn loop logic
       while (!board.gameOver()) {
         showf("Turn %d\n", board.getNumTurns() + 1);
         showLine();
@@ -76,6 +80,7 @@ public class TicTacToe {
         int row;
         int column;
 
+        // Row/Column loop logic which validates correct row/column input
         do {
           showf("Row: ");
           row = getBoardInput();
@@ -85,6 +90,7 @@ public class TicTacToe {
         } while (!board.takeTurn(row, column, player));
       }
 
+      // Game is over, show the final board result and ask if we want to play again
       board.showBoard();
       showEllipse();
       show("Game over! Play again? (y/n)");
@@ -98,6 +104,20 @@ public class TicTacToe {
     }
 
     show("Goodbye. Thanks for playing.");
+  }
+
+  private int getBoardInput() {
+    return scanner.nextInt();
+  }
+
+  private String getInput() {
+    showf(CONSOLE_INPUT);
+    return scanner.next();
+  }
+
+  private char getSingleCharInput() {
+    showf(CONSOLE_INPUT);
+    return scanner.next().charAt(0);
   }
 
   private void initPlayers() {
@@ -128,6 +148,9 @@ public class TicTacToe {
     return players.get(board.getNumTurns() % players.size());
   }
 
+  /**
+   * Builder to configure a {@link TicTacToe} instance. Sanitizes invalid input parameters.
+   */
   static class Builder {
     private int numPlayers;
     private int width;

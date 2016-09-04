@@ -2,6 +2,9 @@ package com.ekchang.tictactoe.model;
 
 import static com.ekchang.tictactoe.util.Printer.showf;
 
+/**
+ * Represents a single tile on the board.
+ */
 public class Square {
   char square = ' ';
 
