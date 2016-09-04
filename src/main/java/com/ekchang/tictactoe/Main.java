@@ -8,10 +8,16 @@ import static com.ekchang.tictactoe.util.Printer.lineBreak;
 import static com.ekchang.tictactoe.util.Printer.show;
 import static com.ekchang.tictactoe.util.Printer.showf;
 
+/**
+ * Main entry point for the game. Run {@link #main(String[])} to start the game.
+ */
 public class Main {
   private Main() {
   }
 
+  /**
+   * Our main method, nice and tidy.
+   */
   public static void main(String[] args) {
     showFancyTitle();
     Scanner scanner = new Scanner(System.in);
@@ -39,13 +45,13 @@ public class Main {
     lineBreak();
   }
 
-  public static boolean askCustomGame(Scanner scanner) {
+  private static boolean askCustomGame(Scanner scanner) {
     show("Custom game settings or classic tic-tac-toe? (Enter 'custom' or anything for default)");
     showf(CONSOLE_INPUT);
     return scanner.next().toLowerCase().equals("custom");
   }
 
-  public static TicTacToe makeCustomBoard(Scanner scanner) {
+  private static TicTacToe makeCustomBoard(Scanner scanner) {
     int numPlayers;
     numPlayers = getNumPlayers(scanner);
 
